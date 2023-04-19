@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<title> Demo Program</title>
+<body style="text-align : center">
+
+<h1 style= "text-align: center;">
+    Random Walk on 2 Dimation
+</h1>
+</br>
+
+Steps:
+<input id="textArea" type="text">
+</input>
+
+&nbsp;&nbsp;
+
+<button onclick = "onClickStart()">
+    Start
+</button>
+<button onclick = "onClickClear()">
+    Clear
+</button>
+
+</br></br>
+
+<canvas id="displayArea" width="400" height="400" style="border:1px solid #000000;"></canvas>
+
+<script>
+    const WIDTH = 400;
+    const HEIGHT = 400;
+    const START_X = WIDTH / 2;
+    const START_Y = HEIGHT / 2;
+    const STEP_SIZE = 10;
+    const WAIT_TIME = 10;  // in milliseconds
+
+    function onClickStart() {
+        let input = parseInt(document.getElementById("textArea").value);
+        //drawLine(1, 1, 100, 100);
+        if (isNaN(input)) {
+            alert("Expect a non negative number");
+        } else {
+            resetCanvas();
+            status = 1;
+            snake(input);
+            status = 0;
+        }
+    }
+    
+    function onClickClear() {
+        resetCanvas();
+    }
+
+    function resetCanvas() {
+        const canvas = document.getElementById("displayArea");
+        //const ctx = canvas.getContext('2d'); 
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = canvas.width;
+    }
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function snake(steps) {
+        var dx = [0, 0, STEP_SIZE, -STEP_SIZE];
+        var dy = [STEP_SIZE, -STEP_SIZE, 0, 0];
+        var curX = START_X;
+        var curY = START_Y;
+
+        for (var i = 0; i < steps; i++) {
+            let dir = Math.floor(Math.random() * 4)
+            let nextX = curX + dx[dir];
+            let nextY = curY + dy[dir];
+            if (nextX < 0 || nextY < 0 || nextX >= WIDTH || nextY >= HEIGHT) {
+                i--;
+                continue;
+            }
+            drawLine(curX, curY, nextX, nextY);
+            curX = nextX;
+            curY = nextY;
+            await sleep(WAIT_TIME);
+        }
+    }
+
+    function drawLine(fromX, fromY, toX, toY) {
+        const canvas = document.getElementById("displayArea");
+        const ctx = canvas.getContext("2d");
+        ctx.strokeStyle = "#666666";
+        ctx.moveTo(fromX, fromY);
+        ctx.lineTo(toX, toY);
+        ctx.stroke();
+    }
+
+</script>
+
+</body>
+</html>
